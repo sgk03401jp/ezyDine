@@ -3,7 +3,7 @@
 #include <string.h>
 #include "uart.h"
 
-#define _XTAL_FREQ 20000000		// Clock Frequency
+#define _XTAL_FREQ 4000000		// Clock Frequency
 #define UART_DELIM 	0x0d
 #define UART_EOL	0x0
 
@@ -21,23 +21,28 @@ void main()
 	char ch;
 	char cnt = 0;
 	char str[10];
+
+	ADCON1 = 0x06;			// ADCs off
+	CMCON = 0x07;			//ポートAをデジタルI/Oとして使用
 	PORTA = 0b00000000;		// Initialize PORTA
 	PORTB = 0b00000000;		// Initialize PORTB
 //	PORTD = 0x00;			// Initialize PORTD
-	TRISA = 0xff; 			// PORTA as Input
+	TRISA = 0xff; 			
 	TRISB = 0x00; 			// PORTB as Output
 //	TRISD = 0xff;			// PORTD as Input
 
-//	CMCON = 0x07;			//ポートAをデジタルI/Oとして使用
+
 	OPTION = 0b00000111;	//プリスケール設定 1/256,ポートB弱プルアップ設定 **2.00
 //	GIE  = 0;				//割り込みは使用しない
 
+	RB4 = 1;
 	RB7 = 1;
 	RB6 = 0;
 	UART_Init(9600);
-	cnt = PORTA;
+	cnt = PORTA & 0x0f;
 	RB7=0;
 
+	__delay_ms(500);
 	UART_Write_Text("PE0123456789");
 	UART_Write(UART_DELIM);
 	UART_Write(UART_EOL);
@@ -53,12 +58,12 @@ void main()
       	if(UART_Data_Ready()) {
 			RB7=1; 
         	ch = UART_Read();
-			//__delay_ms(50);
+			//__delay_ms(1);
     		UART_Write(ch);
     	} else {
 			RB7=0;
 		}
 		RB6 = 0;
-		__delay_ms(1);
+		//__delay_ms(1);
    } while(1);
 }

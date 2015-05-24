@@ -1,9 +1,9 @@
 #ifndef _UART_H_
 #define _UART_H_
 
-#define _XTAL_FREQ 20000000
-#define BAUD 115200    
-#define FOSC 20000000L
+#define _XTAL_FREQ 4000000
+#define BAUD 9600   
+#define FOSC 4000000L
 #define NINE 0     /* Use 9bit communication? FALSE=8bit */
 
 
